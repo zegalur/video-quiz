@@ -15,3 +15,9 @@ Go to the [player's webpage](https://zegalur.github.io/video-quiz/player/). Then
 6. Watch the next video segment, and so on.
 
 ![instructions_img](instructions.jpg)
+
+# Keyboard shortcuts
+
+* **Repeat** current block: R or Numpad+
+* **Skip** current question: S or Numpad_0
+* **Answer** 1 to 5: 1 to 5 or Numpad_1 to Numpad_5
