@@ -146,11 +146,14 @@
             width: 100%;
             display: table-cell;
             vertical-align: top;
+            min-width: 405px;
         }
 
-        .transparent {
+        .disabled {
             opacity: 0.5;
+            pointer-events: none;
         }
+
     </style>
 
 </head>
@@ -171,8 +174,10 @@
                         </div>
                     </div>
                     <div class="answers-div">
-                        <a href="#" class="flat_button" onclick="repeat()" >REPEAT</a>
-                        <a href="#" class="flat_button" onclick="skip()" >SKIP</a>
+                        <a href="#" class="flat_button" id="repeat_btn" onclick="repeat()" >REPEAT (R,+)</a>
+                        <a href="#" class="flat_button" id="skip_btn" onclick="skip()" >SKIP (S,0)</a>
+                        &nbsp;
+                        <a href="https://zegalur.github.io/video-quiz/" target="_blank" rel="noopener noreferrer" class="flat_button" id="skip_btn">INFO</a>
                         <br>
                         <p id="subtitle">[EMPTY]</p>
 
@@ -223,6 +228,9 @@
 
         const answer_bars = answer_elements.map(
             (x) => x.parentElement);
+        
+        const repeat_btn = document.getElementById('repeat_btn');
+        const skip_btn = document.getElementById('skip_btn');
 
 
         function playVideo() {
@@ -415,14 +423,18 @@
 
 
         function unblock_answers() {
+            repeat_btn.classList.remove("disabled");
+            skip_btn.classList.remove("disabled");
             for (let i = 0; i < answer_bars.length; i++)
-                answer_bars[i].classList.remove("transparent");
+                answer_bars[i].classList.remove("disabled");
         }
 
 
         function block_answers() {
+            repeat_btn.classList.add("disabled");
+            skip_btn.classList.add("disabled");
             for (let i = 0; i < answer_bars.length; i++)
-                answer_bars[i].classList.add("transparent");
+                answer_bars[i].classList.add("disabled");
         }
 
 
@@ -444,6 +456,31 @@
             }
         }
 
+
+        function on_keydown(event) {
+            if(state != State.PauseAnswer)
+                return;
+
+            if([49, 97].includes(event.keyCode)) // 1 or numpad 1
+                select_answer(1);
+            else if ([50, 98].includes(event.keyCode)) // 2 or numpad 2
+                select_answer(2);
+            else if ([51, 99].includes(event.keyCode)) // 3 or numpad 3
+                select_answer(3);
+            else if ([52, 100].includes(event.keyCode)) // 4 or numpad 4
+                select_answer(4);
+            else if ([53, 101].includes(event.keyCode)) // 5 or numpad 5
+                select_answer(5);
+
+            else if ([82, 107].includes(event.keyCode)) // r or numpad +
+                repeat();
+            else if ([48, 83, 96].includes(event.keyCode)) // s, 0 or numpad 0
+                skip();
+        }
+
+
+        block_answers();
+        document.addEventListener('keydown', on_keydown);
 
         const videoPlayer = document.getElementById('video-player');
 
