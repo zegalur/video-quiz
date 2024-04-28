@@ -14,7 +14,7 @@ Go to the [player's webpage](https://zegalur.github.io/video-quiz/player/). Then
 5. Select the correct translation when the quiz becomes active.
 6. Watch the next video segment, and so on.
 
-It's best not to use hand-translated SRT but instead to translate the original SRT 
+It's best not to use hand-translated SRT but instead to auto-translate the original SRT 
 file so that the time codes match perfectly. There are plenty of free online SRT 
 translation websites out there.
 
