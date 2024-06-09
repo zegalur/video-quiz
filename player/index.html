@@ -303,14 +303,11 @@
             // Find the current subtitle block based on the current time
             var fn = function (eps) {
                 return function (subtitle) {
-                    return (time >= (subtitle.start + eps)) && (time <= (subtitle.end - eps));
+                    return (time >= (subtitle.start + eps)) && (time < (subtitle.end - eps));
                 };
             }
             const currentSubtitleJAP = subtitleData['JAP'].find(fn(0.1));
             const currentSubtitleENG = subtitleData['ENG'].find(fn(0.1));
-
-            if (currentSubtitleENG)
-                lastBlockENG = currentSubtitleENG;
 
             const videoPlayer = document.getElementById('video-player');
             block_answers();
@@ -324,6 +321,8 @@
 
             switch(state) {
                 case State.Initial:
+                    return;
+
                 case State.Playing:
                     subtitleElement.innerHTML = '[...]';
                     if(currentSubtitleJAP)
@@ -332,19 +331,23 @@
                         answer_elements[i].innerHTML = '[...]';
                     remove_answers_highlights();
                     break;
+
                 case State.PauseAnswer:
                     pbar.style.height = "0%";
-                    if(!videoPlayer.paused)
+                    if(!videoPlayer.paused) {
                         // move on to the next question
                         state = State.Playing;
-                    unblock_answers();
+                    } else {
+                        unblock_answers();
+                    }
                     break;
+
                 case State.PlayAnswer:
                     break;
             }
 
             if (lastBlockJAP && (lastBlockJAP != currentSubtitleJAP)) {
-                // we encounter a new block so we pause the video
+                // we are at the end of the current block.
                 videoPlayer.pause();
                 if(state == State.Playing) {
                     // this is a new quiz
@@ -361,7 +364,6 @@
                             answers.push(answer.text);
                         }
                         currentRightAnswer = answers[0];
-                        let right_a_indx = 0;
                         shuffle(answers);
                         for (let i = 0; i < answer_elements.length; i++) {
                             answer_elements[i].innerHTML = answers[i];
@@ -374,6 +376,7 @@
             }
 
             lastBlockJAP = currentSubtitleJAP;
+            lastBlockENG = currentSubtitleENG;
         }
 
 
@@ -439,8 +442,6 @@
 
 
         async function select_answer(j) {
-            /*if(state != State.PauseAnswer && state != State.PlayAnswer)
-                return;*/
             if(state != State.PauseAnswer)
                 return;
                 
